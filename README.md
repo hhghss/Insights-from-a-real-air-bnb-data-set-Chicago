@@ -131,7 +131,7 @@ from folium.plugins import HeatMap
 import pandas as pd
 
 
-hawaii_data = listings[['latitude', 'longitude', 'price']]  # Example, you may add more columns
+chicagoo_data = listings[['latitude', 'longitude', 'price']]  # Example, you may add more columns
 
 # Create a base map centered around Chicago
 m = folium.Map(location=[41.87914772760063, -87.62761455072854], zoom_start=10)
@@ -143,12 +143,55 @@ heat_data = [[row['latitude'], row['longitude']] for index, row in hawaii_data.i
 HeatMap(heat_data).add_to(m)
 
 # Save the map as an HTML file to view in a browser
-m.save('hawaii_heatmap.html')
+m.save('chicagoo_heatmap.html')
 
 # If you're using Jupyter Notebook, you can display the map directly in the notebook:
 m
 ```
 <img src="https://github.com/user-attachments/assets/f271fec2-358d-4d8c-81aa-f64f56e970eb" alt="Value Counts Output" width="600"/>
+
+## Who Are the Top 10 Hosts with the Most Listings?
+```
+# Calculate the top 10 hosts by the number of listings
+top_hosts = listings['host_name'].value_counts().head(10)
+
+# Plot the data
+plt.figure(figsize=(10, 6))
+top_hosts.plot(kind='bar', color='darkseagreen', edgecolor='darkolivegreen')
+plt.title('Top 10 Hosts by Number of Listings', fontsize=14)
+plt.xlabel('Host Name', fontsize=12)
+plt.ylabel('Number of Listings', fontsize=12)
+plt.xticks(rotation=45, ha='right')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+```
+<img src="https://github.com/user-attachments/assets/d69f6c36-dd27-4b0e-a9c9-98a28ee20d1f" alt="Value Counts Output" width="600"/>
+
+## How Does the Minimum Night Requirement Affect the Average Price?
+```
+# Group by minimum nights and calculate the average price
+avg_price_by_min_nights = listings.groupby('minimum_nights')['price'].mean().sort_index()
+
+# Filter for minimum nights <= 30 (to focus on reasonable values)
+avg_price_by_min_nights = avg_price_by_min_nights[avg_price_by_min_nights.index <= 30]
+
+# Plot the data
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 6))
+avg_price_by_min_nights.plot(kind='line', marker='o', color='tan', linewidth=2)
+plt.title('Average Price by Minimum Nights (Up to 30 Nights)', fontsize=14)
+plt.xlabel('Minimum Nights', fontsize=12)
+plt.ylabel('Average Price (USD)', fontsize=12)
+plt.grid(linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+```
+<img src="https://github.com/user-attachments/assets/72e325c0-6638-4ef7-bc0e-e034024af43f" alt="Value Counts Output" width="600"/>
+
+
+
 
 
 
